@@ -36,6 +36,14 @@ module.exports = {
         defaultValue: false,
         allowNull: false
       },
+      last_seen_at: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
+      push_token: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -13,42 +11,51 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
+  User.init(
+    {
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      profile_picture_url: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      is_online: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      last_seen_at: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      push_token: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true
-      }
+    {
+      sequelize,
+      modelName: "User",
+      tableName: "users",
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    profilePictureUrl: { 
-      type: DataTypes.STRING, 
-      allowNull: true, 
-      field: 'profile_picture_url' 
-    },
-    isOnline: { 
-      type: DataTypes.BOOLEAN, 
-      defaultValue: false,
-      field: 'is_online'
-    }
-  }, {
-    sequelize,
-    modelName: 'User',
-    tableName: 'users',
-  });
+  );
   return User;
 };
