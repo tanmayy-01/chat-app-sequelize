@@ -1,0 +1,105 @@
+<%- include('partials/header') %>
+
+<div class="profile-page-wrapper">
+    <div class="profile-card">
+        <div class="profile-card-header">
+            <a href="/" class="btn-icon back-btn" title="Back to Chat">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h2>Profile Settings</h2>
+            <a href="/logout" class="btn-icon logout-btn" title="Logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </div>
+
+        <div id="statusAlert" class="alert" style="display: none;"></div>
+
+        <form id="profileForm" enctype="multipart/form-data">
+            <div class="avatar-upload-section">
+                <div class="avatar-preview-container">
+                    <img id="avatarPreview" src="<%= currentUser.profile_picture_url || '/images/default-avatar.png' %>" alt="Avatar" onerror="this.src='/images/default-avatar.png'">
+                    <label for="avatarInput" class="avatar-edit-badge" title="Change Avatar">
+                        <i class="fa-solid fa-camera"></i>
+                    </label>
+                    <input type="file" id="avatarInput" name="avatar" accept="image/*" style="display: none;">
+                </div>
+                <p class="avatar-hint">Allowed formats: JPG, PNG, WEBP (Max 5MB)</p>
+            </div>
+
+            <div class="form-group">
+                <label for="name"><i class="fa-regular fa-user"></i> Display Name</label>
+                <input type="text" id="name" name="name" value="<%= currentUser.name %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="username"><i class="fa-solid fa-at"></i> Username</label>
+                <input type="text" id="username" name="username" value="<%= currentUser.username %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email"><i class="fa-regular fa-envelope"></i> Email (Read-only)</label>
+                <input type="email" id="email" value="<%= currentUser.email %>" disabled class="disabled-input">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="saveProfileBtn">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Save Changes</span>
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const profileForm = document.getElementById('profileForm');
+    const statusAlert = document.getElementById('statusAlert');
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+
+    avatarInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                avatarPreview.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        saveProfileBtn.disabled = true;
+        saveProfileBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+        statusAlert.style.display = 'none';
+
+        try {
+            const formData = new FormData(profileForm);
+            const res = await fetch('/api/v1/users/profile', {
+                method: 'PUT',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                statusAlert.className = 'alert alert-success';
+                statusAlert.textContent = 'Profile successfully updated!';
+                statusAlert.style.display = 'block';
+            } else {
+                statusAlert.className = 'alert alert-danger';
+                statusAlert.textContent = (data.error && data.error[0]) || data.message || 'Update failed';
+                statusAlert.style.display = 'block';
+            }
+        } catch (err) {
+            statusAlert.className = 'alert alert-danger';
+            statusAlert.textContent = 'Network error while updating profile.';
+            statusAlert.style.display = 'block';
+        } finally {
+            saveProfileBtn.disabled = false;
+            saveProfileBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> <span>Save Changes</span>';
+        }
+    });
+</script>
+
+<%- include('partials/footer') %>
+

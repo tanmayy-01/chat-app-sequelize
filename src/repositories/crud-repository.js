@@ -45,13 +45,12 @@ class CrudRepository {
     }
 
     async update(id, data, options = {}) {
-        const [affectedRows] = await this.model.update(data, {
+        // Verify resource exists before updating
+        await this.get(id);
+        await this.model.update(data, {
             where: { id },
             ...options
         });
-        if (affectedRows === 0) {
-            throw new AppError('Resource not found or no changes made', StatusCodes.NOT_FOUND);
-        }
         return await this.get(id);
     }
 }
