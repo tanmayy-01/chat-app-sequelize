@@ -7,7 +7,7 @@
         <header class="sidebar-header">
             <div class="user-profile-badge">
                 <div class="avatar-wrapper">
-                    <img src="<%= currentUser.profile_picture_url || '/images/default-avatar.png' %>" alt="<%= currentUser.name %>" class="user-avatar" onerror="this.src='/images/default-avatar.png'">
+                    <img src="<%= currentUser.profile_picture_url || '/images/default-avatar.svg' %>" alt="<%= currentUser.name %>" class="user-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                     <span class="status-indicator online"></span>
                 </div>
                 <div class="user-info">
@@ -95,7 +95,7 @@
                 </button>
                 <div class="chat-header-info" id="chatHeaderInfo">
                     <div class="avatar-wrapper">
-                        <img id="chatHeaderAvatar" src="/images/default-avatar.png" alt="Avatar" class="user-avatar" onerror="this.src='/images/default-avatar.png'">
+                        <img id="chatHeaderAvatar" src="/images/default-avatar.svg" alt="Avatar" class="user-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                         <span id="chatHeaderOnlineDot" class="status-indicator offline"></span>
                     </div>
                     <div class="header-details">
@@ -257,7 +257,7 @@
         </div>
         <div class="modal-body">
             <div class="group-info-summary">
-                <img id="infoGroupAvatar" src="/images/default-group.png" alt="Group" class="group-large-avatar" onerror="this.src='/images/default-group.png'">
+                <img id="infoGroupAvatar" src="/images/default-group.svg" alt="Group" class="group-large-avatar" onerror="this.onerror=null; this.src='/images/default-group.svg';">
                 <h4 id="infoGroupTitle">Group Title</h4>
                 <p id="infoGroupDesc" class="group-info-desc"></p>
             </div>

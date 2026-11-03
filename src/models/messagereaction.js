@@ -18,6 +18,12 @@ module.exports = (sequelize, DataTypes) => {
 
   MessageReaction.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
+      },
       message_id: {
         type: DataTypes.INTEGER,
         allowNull: false

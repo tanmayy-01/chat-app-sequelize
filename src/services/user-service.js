@@ -28,7 +28,7 @@ class UserService {
             username: userData.username,
             email: userData.email,
             password: hashedPassword,
-            profile_picture_url: userData.profile_picture_url || '/images/default-avatar.png'
+            profile_picture_url: userData.profile_picture_url || '/images/default-avatar.svg'
         });
 
         const token = generateToken({

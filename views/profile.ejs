@@ -17,7 +17,7 @@
         <form id="profileForm" enctype="multipart/form-data">
             <div class="avatar-upload-section">
                 <div class="avatar-preview-container">
-                    <img id="avatarPreview" src="<%= currentUser.profile_picture_url || '/images/default-avatar.png' %>" alt="Avatar" onerror="this.src='/images/default-avatar.png'">
+                    <img id="avatarPreview" src="<%= currentUser.profile_picture_url || '/images/default-avatar.svg' %>" alt="Avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                     <label for="avatarInput" class="avatar-edit-badge" title="Change Avatar">
                         <i class="fa-solid fa-camera"></i>
                     </label>

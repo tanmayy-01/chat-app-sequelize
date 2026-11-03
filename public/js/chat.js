@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         conversations.forEach(c => {
             const isGroup = c.type === 'group';
             let title = isGroup ? c.title : (c.partner ? c.partner.name : 'Unknown User');
-            let avatar = isGroup ? (c.group_avatar_url || '/images/default-group.png') : ((c.partner && c.partner.profile_picture_url) || '/images/default-avatar.png');
+            let avatar = isGroup ? (c.group_avatar_url || '/images/default-group.svg') : ((c.partner && c.partner.profile_picture_url) || '/images/default-avatar.svg');
             let isOnline = !isGroup && c.partner && c.partner.is_online;
 
             let lastMsgText = 'No messages yet';
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
             li.dataset.conversationId = c.id;
             li.innerHTML = `
                 <div class="avatar-wrapper">
-                    <img src="${avatar}" alt="${escapeHtml(title)}" class="user-avatar" onerror="this.src='/images/default-avatar.png'">
+                    <img src="${avatar}" alt="${escapeHtml(title)}" class="user-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                     ${!isGroup ? `<span class="status-indicator ${isOnline ? 'online' : 'offline'}" data-user-dot="${c.partner ? c.partner.id : ''}"></span>` : ''}
                 </div>
                 <div class="convo-content">
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Setup Header
             const isGroup = activeConversation.type === 'group';
             let title = isGroup ? activeConversation.title : '';
-            let avatar = isGroup ? (activeConversation.group_avatar_url || '/images/default-group.png') : '/images/default-avatar.png';
+            let avatar = isGroup ? (activeConversation.group_avatar_url || '/images/default-group.svg') : '/images/default-avatar.svg';
             let subtitle = '';
 
             if (isGroup) {
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const partnerParticipant = activeConversation.participants.find(p => p.user_id !== CURRENT_USER.id);
                 const partner = partnerParticipant ? partnerParticipant.user : null;
                 title = partner ? partner.name : 'Direct Chat';
-                avatar = (partner && partner.profile_picture_url) || '/images/default-avatar.png';
+                avatar = (partner && partner.profile_picture_url) || '/images/default-avatar.svg';
 
                 chatHeaderOnlineDot.style.display = 'block';
                 if (partner && partner.is_online) {
@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         msgRow.innerHTML = `
             ${!isMine && msg.sender ? `
-                <img src="${msg.sender.profile_picture_url || '/images/default-avatar.png'}" alt="${escapeHtml(msg.sender.name)}" class="sender-mini-avatar" onerror="this.src='/images/default-avatar.png'">
+                <img src="${msg.sender.profile_picture_url || '/images/default-avatar.svg'}" alt="${escapeHtml(msg.sender.name)}" class="sender-mini-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
             ` : ''}
             <div class="message-bubble-wrapper">
                 ${senderName}
@@ -478,11 +478,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 if (res.ok && data.success) {
-                    socket.emit('send_message', {
-                        conversationId: activeConversation.id,
-                        content: data.data.content,
-                        message_type: data.data.message_type
-                    });
                     clearAttachment();
                     messageTextInput.value = '';
                 } else {
@@ -588,12 +583,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             body: formData
                         });
                         const data = await res.json();
-                        if (res.ok && data.success) {
-                            socket.emit('send_message', {
-                                conversationId: activeConversation.id,
-                                content: '',
-                                message_type: 'audio'
-                            });
+                        if (!res.ok || !data.success) {
+                            alert('Failed to send voice recording');
                         }
                     } catch (e) {
                         alert('Failed to send voice recording');
@@ -734,7 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.className = 'modal-user-item';
             div.innerHTML = `
                 <div class="avatar-wrapper">
-                    <img src="${u.profile_picture_url || '/images/default-avatar.png'}" alt="${escapeHtml(u.name)}" class="user-avatar" onerror="this.src='/images/default-avatar.png'">
+                    <img src="${u.profile_picture_url || '/images/default-avatar.svg'}" alt="${escapeHtml(u.name)}" class="user-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                     <span class="status-indicator ${u.is_online ? 'online' : 'offline'}"></span>
                 </div>
                 <div class="user-text">
@@ -781,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     label.className = 'member-checkbox-item';
                     label.innerHTML = `
                         <input type="checkbox" name="memberIds" value="${u.id}">
-                        <img src="${u.profile_picture_url || '/images/default-avatar.png'}" alt="${escapeHtml(u.name)}" class="mini-avatar" onerror="this.src='/images/default-avatar.png'">
+                        <img src="${u.profile_picture_url || '/images/default-avatar.svg'}" alt="${escapeHtml(u.name)}" class="mini-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                         <span>${escapeHtml(u.name)} (@${escapeHtml(u.username)})</span>
                     `;
                     membersList.appendChild(label);
@@ -835,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ================= GROUP INFO & MEMBERS MODAL =================
     btnGroupInfo.addEventListener('click', () => {
         if (!activeConversation || activeConversation.type !== 'group') return;
-        document.getElementById('infoGroupAvatar').src = activeConversation.group_avatar_url || '/images/default-group.png';
+        document.getElementById('infoGroupAvatar').src = activeConversation.group_avatar_url || '/images/default-group.svg';
         document.getElementById('infoGroupTitle').textContent = activeConversation.title;
         document.getElementById('infoGroupDesc').textContent = activeConversation.description || 'No description provided';
         document.getElementById('infoMemberCount').textContent = activeConversation.participants ? activeConversation.participants.length : 0;
@@ -858,7 +849,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.className = 'group-member-item';
             div.innerHTML = `
                 <div class="member-left">
-                    <img src="${u.profile_picture_url || '/images/default-avatar.png'}" alt="${escapeHtml(u.name)}" class="mini-avatar" onerror="this.src='/images/default-avatar.png'">
+                    <img src="${u.profile_picture_url || '/images/default-avatar.svg'}" alt="${escapeHtml(u.name)}" class="mini-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                     <div>
                         <strong>${escapeHtml(u.name)}</strong>
                         <span class="member-username">@${escapeHtml(u.username)}</span>
@@ -905,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     item.className = 'modal-user-item mini';
                     item.innerHTML = `
                         <div class="avatar-wrapper">
-                            <img src="${u.profile_picture_url || '/images/default-avatar.png'}" alt="${escapeHtml(u.name)}" class="user-avatar" onerror="this.src='/images/default-avatar.png'">
+                            <img src="${u.profile_picture_url || '/images/default-avatar.svg'}" alt="${escapeHtml(u.name)}" class="user-avatar" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                         </div>
                         <div class="user-text">
                             <h4>${escapeHtml(u.name)}</h4>
@@ -1017,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const item = document.createElement('div');
                         item.className = 'search-result-item';
                         item.innerHTML = `
-                            <img src="${u.profile_picture_url || '/images/default-avatar.png'}" class="mini-avatar" alt="${escapeHtml(u.name)}" onerror="this.src='/images/default-avatar.png'">
+                            <img src="${u.profile_picture_url || '/images/default-avatar.svg'}" class="mini-avatar" alt="${escapeHtml(u.name)}" onerror="this.onerror=null; this.src='/images/default-avatar.svg';">
                             <div class="result-text">
                                 <strong>${escapeHtml(u.name)}</strong>
                                 <span>@${escapeHtml(u.username)}</span>

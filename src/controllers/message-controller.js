@@ -8,6 +8,14 @@ const sendMessage = async (req, res) => {
     try {
         const conversationId = req.params.conversationId || req.body.conversation_id;
         const message = await messageService.sendMessage(conversationId, req.user.id, req.body, req.file);
+
+        if (req.io) {
+            req.io.to(`conversation_${conversationId}`).emit('new_message', {
+                conversationId: Number(conversationId),
+                message
+            });
+        }
+
         return res.status(StatusCodes.CREATED).json(
             successResponse('Message sent successfully', message)
         );

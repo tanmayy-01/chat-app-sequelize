@@ -40,7 +40,7 @@ class ConversationService {
             throw new AppError('Group title is required', StatusCodes.BAD_REQUEST);
         }
 
-        const avatarUrl = file ? `/uploads/avatars/${file.filename}` : '/images/default-group.png';
+        const avatarUrl = file ? `/uploads/avatars/${file.filename}` : '/images/default-group.svg';
 
         const conversation = await this.conversationRepository.create({
             type: 'group',

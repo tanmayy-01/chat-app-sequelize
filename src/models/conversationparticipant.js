@@ -23,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
 
   ConversationParticipant.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
+      },
       conversation_id: {
         type: DataTypes.INTEGER,
         allowNull: false
